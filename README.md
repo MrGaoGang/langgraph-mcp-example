@@ -1,5 +1,13 @@
 # README.md
 
+> before debug all example , please create .env file in the root
+
+```
+# .env
+OPENAI_API_KEY=yours open ai key
+
+```
+
 ## langgraph example
 > ./src/langgraph
 
