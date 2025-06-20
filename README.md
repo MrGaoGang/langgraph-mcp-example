@@ -5,7 +5,7 @@
 ```
 # .env
 OPENAI_API_KEY=yours open ai key
-
+DEEPSEEK_API_KEY=yours deepseek key
 ```
 
 ## langgraph example

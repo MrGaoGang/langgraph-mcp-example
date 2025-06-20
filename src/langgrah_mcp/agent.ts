@@ -6,12 +6,25 @@ import { baseLLMTool } from "./default-tool";
 export async function runAgent(tools: any, message: string) {
   // console.log("输入的tools:", tools);
 
-  const agent = createReactAgent({
-    llm: new ChatOpenAI({
+  let openai = null;
+  if (process.env.DEEPSEEK_API_KEY) {
+    openai = new ChatOpenAI({
+      modelName: "deepseek-chat",
+      temperature: 0.7,
+      apiKey: process.env.DEEPSEEK_API_KEY,
+      configuration: {
+        baseURL: "https://api.deepseek.com",
+      },
+    });
+  } else {
+    openai = new ChatOpenAI({
       temperature: 0,
       model: "gpt-3.5-turbo",
-      maxTokens: 600,
-    }),
+    });
+  }
+
+  const agent = createReactAgent({
+    llm: openai,
     tools: [...tools, baseLLMTool],
   });
 
@@ -23,9 +36,9 @@ export async function runAgent(tools: any, message: string) {
     recursionLimit: 3,
   });
   const graphImg = graph?.drawMermaid();
-  console.log('====================================');
+  console.log("====================================");
   console.log(graphImg);
-  console.log('====================================');
+  console.log("====================================");
   console.log("step4: 开始执行 " + message);
 
   const stream = await agent.stream(inputs, {
