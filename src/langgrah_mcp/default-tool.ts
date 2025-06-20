@@ -3,7 +3,19 @@ dotenv.config();
 import { tool } from "@langchain/core/tools";
 import OpenAI from "openai";
 import z from "zod";
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+let client = null;
+if (process.env.DEEPSEEK_API_KEY) {
+  client = new OpenAI({
+    apiKey: process.env.DEEPSEEK_API_KEY,
+    baseURL: "https://api.deepseek.com",
+  });
+} else {
+  client = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 export const baseLLMTool = tool(
   async ({ message }) => {
