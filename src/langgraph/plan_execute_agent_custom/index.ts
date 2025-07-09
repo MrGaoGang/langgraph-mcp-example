@@ -21,6 +21,8 @@ const tools = [searchTool];
 
 // 🎯 2.1 定义状态（State）
 
+const MAX_PLAN_COUNT = 5;
+
 const PlanExecuteState = Annotation.Root({
   input: Annotation<string>({
     reducer: (x, y) => y ?? x ?? "",
@@ -34,6 +36,11 @@ const PlanExecuteState = Annotation.Root({
   response: Annotation<string>({
     reducer: (x, y) => y ?? x,
   }),
+  // 避免一直replan，最多replan n次
+  replanCount: Annotation<number>({
+    reducer: (current, updated) => updated ?? current ?? 0,
+    default: () => 0,
+  }),
 });
 export async function main() {
   const agentExecutor = createReactAgent({
@@ -46,12 +53,7 @@ export async function main() {
   ): Promise<Partial<typeof PlanExecuteState.State>> {
     const plan = await planner.invoke({ objective: state.input });
     console.log("============开始【制定】计划=======start========");
-    console.log(
-      "input:",
-      state,
-      "\noutput:",
-      plan.steps
-    );
+    console.log("input:", state, "\noutput:", plan.steps);
     return { plan: plan.steps };
   }
   async function executeStep(
@@ -81,6 +83,8 @@ export async function main() {
       pastSteps: state.pastSteps
         .map(([step, result]) => `${step}: ${result}`)
         .join("\n"),
+      replanCount: state.replanCount,
+      maxReplanLimit: MAX_PLAN_COUNT,
     });
 
     console.log("============重新【制定】计划=======start========");
@@ -91,7 +95,7 @@ export async function main() {
       return { response: toolCall.args?.response };
     }
 
-    return { plan: toolCall.args?.steps };
+    return { plan: toolCall.args?.steps, replanCount: state.replanCount + 1 };
   }
 
   function shouldEnd(state: typeof PlanExecuteState.State) {
@@ -122,13 +126,13 @@ export async function main() {
   console.log(mermaid);
   console.log("====================================");
 
-  const config = { recursionLimit: 20 };
+  const config = { recursionLimit: 50 };
   const inputs = {
-    input: "what is the hometown of the 2024 Australian open winner?",
+    input: "2024年字节跳动发布的AI产品有哪些?",
   };
 
   for await (const event of await graph.stream(inputs, config)) {
-    console.log('result:',event);
+    console.log("result:", event);
   }
   ``;
 }

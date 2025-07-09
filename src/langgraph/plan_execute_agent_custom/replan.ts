@@ -25,6 +25,10 @@ const replannerPrompt = ChatPromptTemplate.fromTemplate(
 This plan should involve individual tasks, that if executed correctly will yield the correct answer. Do not add any superfluous steps.
 The result of the final step should be the final answer. Make sure that each step has all the information needed - do not skip steps.
 
+Your current replan count is:
+{replanCount}
+
+
 Your objective was this:
 {input}
 
@@ -35,6 +39,7 @@ You have currently done the follow steps:
 {pastSteps}
 
 Update your plan accordingly. If no more steps are needed and you can return to the user, then respond with that and use the 'response' function.
+If you have already replanned {maxReplanLimit} times, then respond with that and use the 'response' function.
 Otherwise, fill out the plan.  
 Only add steps to the plan that still NEED to be done. Do not return previously done steps as part of the plan.`
 );
