@@ -45,6 +45,22 @@ dotenv.config()
 // =============基于 createReactAgent 实现 任务调度=========
 
 
-import { main } from "./workflow-single-use-muti-agent/index"
+// import { main } from "./workflow-single-use-muti-agent/index"
+
+// main()
+
+
+// =============基于 plan and execute 实现 任务调度=========
+
+
+// import { main } from "./plan_execute_agent_default"
+
+// main()
+
+
+// =============基于 plan and execute 实现 任务调度（自定义）=========
+
+
+import { main } from "./plan_execute_agent_custom"
 
 main()
