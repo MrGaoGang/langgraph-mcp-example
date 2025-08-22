@@ -61,6 +61,12 @@ dotenv.config()
 // =============基于 plan and execute 实现 任务调度（自定义）=========
 
 
-import { main } from "./plan_execute_agent_custom"
+// import { main } from "./plan_execute_agent_custom"
+
+// main()
+
+// =============基于 plan and execute 实现 任务调度（自定义 限制最长执行次数）=========
+
+import { main } from "./plan_execute_agent_custom_task_limit"
 
 main()
