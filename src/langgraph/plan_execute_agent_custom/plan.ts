@@ -32,6 +32,8 @@ The result of the final step should be the final answer. Make sure that each ste
 
 const model = new ChatOpenAI({
   modelName: "gpt-4-0125-preview",
-}).withStructuredOutput(planFunction);
+})
+  // https://js.langchain.com/docs/how_to/structured_output/#the-.withstructuredoutput-method
+  .withStructuredOutput(planFunction);
 
 export const planner = plannerPrompt.pipe(model);
